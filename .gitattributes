@@ -1,13 +1,16 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-import urllib.request
+import urllib.request as ur
 
-def getHtml(url):
-    page=urllib.request.urlopen(url)
-    html=page.read()
+
+def gethtml(url):
+    page=ur.urlopen(url)
+    page=page.read()
+    html=page.decode('utf-8')
+
     return html
 
-html=getHtml("http://www.baidu.com")
 
-print(html)
+url="https://www.baidu.com/"
+print(gethtml(url))
