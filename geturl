@@ -1,0 +1,36 @@
+import urllib.request
+import re
+from bs4 import BeautifulSoup ##bs4模块
+##打印网页内容
+url = "https://www.baidu.com/"
+page = urllib.request.urlopen(url)
+page = page.read()
+page_data = page.decode('utf-8')
+##print(page_data)
+
+##网页信息筛选
+
+soup = BeautifulSoup(page_data)
+##print(soup.prettify())
+soup.title
+
+##匹配网页地址
+
+url1 = r'http://\w+.\w+.\w+/'
+url_data = re.findall(url1,page_data)
+print(url_data)
+##定义元组
+
+data = tuple()
+
+##将列表元素一一放入元组内
+
+
+for i in range(len(url_data)):
+    data = url_data[i]
+
+"""url_data = str(url_data)
+print(type(url_data))"""
+##将地址保存在本地
+with open('data.txt','w+') as f:
+    f.write(data)
