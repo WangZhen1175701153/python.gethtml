@@ -1,0 +1,51 @@
+# coding: utf-8
+
+# In[15]:
+
+
+import urllib.request 
+import requests
+from bs4 import BeautifulSoup
+res = requests.get('http://news.sina.com.cn/gov/2017-12-18/doc-ifypsqka6738843.shtml')
+res.encoding = 'utf-8'
+soup = BeautifulSoup(res.text,'html.parser')
+
+
+# In[30]:
+
+
+for x_title in soup.select('strong'):##strong title
+    print(x_title.text)
+
+
+# In[24]:
+
+
+soup.select('.date')[0].contents[0]#time
+
+
+# In[29]:
+
+
+soup.select('.main-title')[0].text###main title
+
+
+# In[47]:
+
+
+timesource = soup.select('.date-source')[0].contents[1].text
+print(timesource)
+type(timesource)
+
+
+# In[55]:
+
+
+from datetime import datetime
+datetime.strptime(timesource,'%Y年%m月%d日 %H:%M')##字符串时间转时间类型
+
+
+# In[61]:
+
+
+soup.select('.date-source a')[0].text    #来源
