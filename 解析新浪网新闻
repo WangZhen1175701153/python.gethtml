@@ -1,51 +1,21 @@
 # coding: utf-8
 
-# In[15]:
-
-
 import urllib.request 
 import requests
 from bs4 import BeautifulSoup
-res = requests.get('http://news.sina.com.cn/gov/2017-12-18/doc-ifypsqka6738843.shtml')
-res.encoding = 'utf-8'
-soup = BeautifulSoup(res.text,'html.parser')
-
-
-# In[30]:
-
-
-for x_title in soup.select('strong'):##strong title
-    print(x_title.text)
-
-
-# In[24]:
-
-
-soup.select('.date')[0].contents[0]#time
-
-
-# In[29]:
-
-
-soup.select('.main-title')[0].text###main title
-
-
-# In[47]:
-
-
-timesource = soup.select('.date-source')[0].contents[1].text
-print(timesource)
-type(timesource)
-
-
-# In[55]:
-
-
 from datetime import datetime
-datetime.strptime(timesource,'%Y年%m月%d日 %H:%M')##字符串时间转时间类型
+
+def GETSINANEWSdetail(newsurl):
+    result = {}
+    res = requests.get(newsurl)
+    res.encoding = 'utf-8'
+    soup = BeautifulSoup(res.text,'html.parser')
+    result['标题'] = soup.select('.main-title')[0].text
+    time = soup.select('.date')[0].contents[0].strip()
+    result['时间'] = datetime.strptime(time,'%Y年%m月%d日 %H:%M')
+    result['来源'] = soup.select('.date-source a')[0].text
+    result['正文'] = ' '.join(p.text.strip() for p in soup.select('#article p'))
+    return result
 
 
-# In[61]:
-
-
-soup.select('.date-source a')[0].text    #来源
+print(GETSINANEWSdetail('http://news.sina.com.cn/gov/2017-12-18/doc-ifypsqka6738843.shtml'))
