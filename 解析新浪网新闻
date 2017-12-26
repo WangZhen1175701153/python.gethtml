@@ -17,5 +17,22 @@ def GETSINANEWSdetail(newsurl):
     result['正文'] = ' '.join(p.text.strip() for p in soup.select('#article p'))
     return result
 
+def parseListLinks(url):
+    newsdetail = []
+    res = requests.get(url)
+    jd = res.text.lstrip('  newsloadercallback(').rstrip(');')
+    jd = json.loads(jd)
+    for ent in jd['result']['data']:
+        newsdetail.append(GETSINANEWSdetail(ent['url']))
+    return newsdetail
 
-print(GETSINANEWSdetail('http://news.sina.com.cn/gov/2017-12-18/doc-ifypsqka6738843.shtml'))
+
+url = 'http://api.roll.news.sina.com.cn/zt_list?channel=news&cat_1=gnxw&cat_2==gdxw1||=gatxw||=zs-pl||=mtjj&level==1||=2&show_ext=1&show_all=1&show_num=22&tag=1&format=json&page={}&callback=newsloadercallback&_=1514247761048'
+news_total = []
+for i in range(1,3):
+    newsurl = url.format(i)
+    newssary = parseListLinks(newsurl)
+    news_total.extend(newssary)
+
+print(len(news_total))
+
